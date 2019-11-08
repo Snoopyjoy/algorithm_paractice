@@ -10,11 +10,11 @@
  * @return {number}
  */
 var removeDuplicates = function(nums) {
-    if( nums.length === 0 ) return 0;
+    if( nums.length <= 1 ) return nums.length;
 
     let cursor = 0;
     nums.forEach( ( num )=>{
-        if( nums[cursor] != num){
+        if( nums[cursor] != num ){
             nums[++cursor] = num;
         }
     } )

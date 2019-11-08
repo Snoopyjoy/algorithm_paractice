@@ -7,8 +7,8 @@
 // @lc code=start
 func removeDuplicates(nums []int) int {
 	numLen := len( nums )
-    if numLen == 0{
-		return 0
+    if numLen <= 1{
+		return numLen
 	}
 	cursor := 0
 	for index := 1; index < numLen; index++ {
