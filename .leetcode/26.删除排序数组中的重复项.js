@@ -10,24 +10,16 @@
  * @return {number}
  */
 var removeDuplicates = function(nums) {
-    const numDic = new Map();
-    let tempIndexs = [];
-    let length = 0;
-    for (let index = 0; index < nums.length; index++) {
-        const numVal = nums[index];
-        if( numDic.has( numVal ) ) {
-            tempIndexs.push( index );
-        }else{
-            numDic.set( numVal, true );
-            length++;
-            let opIndex = tempIndexs.shift();
-            if( opIndex > 0 ){
-                nums[opIndex] = numVal;
-                tempIndexs.push( index );
-            }
+    if( nums.length === 0 ) return 0;
+
+    let cursor = 0;
+    nums.forEach( ( num )=>{
+        if( nums[cursor] != num){
+            nums[++cursor] = num;
         }
-    }
-    return length;
+    } )
+
+    return cursor+1;
 };
 // @lc code=end
 
