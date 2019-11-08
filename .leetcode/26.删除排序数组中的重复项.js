@@ -13,9 +13,10 @@ var removeDuplicates = function(nums) {
     if( nums.length <= 1 ) return nums.length;
 
     let cursor = 0;
-    nums.forEach( ( num )=>{
+    nums.forEach( ( num , index)=>{
         if( nums[cursor] != num ){
-            nums[++cursor] = num;
+            cursor++;
+            if( cursor !== index ) nums[cursor] = num;
         }
     } )
 

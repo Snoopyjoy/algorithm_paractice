@@ -14,7 +14,9 @@ func removeDuplicates(nums []int) int {
 	for index := 1; index < numLen; index++ {
 		if nums[cursor] != nums[index] {
 			cursor++
-			nums[cursor] = nums[index]
+			if cursor != index {
+				nums[cursor] = nums[index]
+			}
 		}
 	}  
 	return cursor+1
