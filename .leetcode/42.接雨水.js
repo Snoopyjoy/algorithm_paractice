@@ -11,77 +11,136 @@
  */
 var trap = function(height) {
     const stack = [ [-1, -1] ];      //高度,索引
-    let curBottom = 0;
+    let bottomInfo = {
+        val: 0,
+        index: -1
+    };
     let result = 0;
     height.forEach( (val, index)=>{
         const lastEle = stack[stack.length-1];
-        const lastVal = lastEle[0];
 
         console.log( "---------------------------" );
-        console.log( "lastVal", lastVal);
-        console.log( "curVal", val);
 
         stack.push(  [val, index] );
-        if( val >= lastVal ){   //检查是否有闭合区间并收集
-            result += collectStack( stack, curBottom );
-            curBottom = lastVal;
+        console.log("stackStart", stack);
+        if( lastEle ){   //检查是否有闭合区间并收集雨水
+
+            const lastVal = lastEle[0];
+            const lastIndex = lastEle[1];
+            const bottomVal = bottomInfo.val;
+
+            if( val > lastVal || ( val > bottomVal && (index - lastIndex) > 1 ) ){
+
+                const addWater = collectStack( stack, bottomInfo );
+                console.log("addResult", addWater)
+                result += addWater;
+                console.log("result", result);
+            
+            }
         }
+
+        console.log( stack );
     } );
     return result;
 };
 
-function collectStack( stack, bottom ){
+function collectStack( stack, bottomInfo ){
     let result = 0;
-    const wall = stack[stack.length-1];
-    const wallVal = wall[0];
-    const wallIndex = wall[1];
+    const endStackIndex = stack.length-1;
+    const endWall = stack[endStackIndex];
+    const endWallVal = endWall[0];
+    const endWallIndex = endWall[1];
 
-    const startWall = stack[1];
-    if(!startWall) return 0;
+    let startStackIndex = 0;
+    let startWallVal = -1;
 
-    const startWallVal = startWall[0];
-    const startWallIndex = startWall[1];
-
-    let stopIndex = -1;
-    
-    let startIndex = 1;
-    //查找起始蓄水起始索引
-    for (let i = stack.length - 2; i >=0; i--) {
-
-    }
+    let bottomVal = bottomInfo.val;
+    let bottomIndex = bottomInfo.index;
+    console.log("bottomVal",bottomVal);
+    console.log("bottomIndex",bottomIndex);
 
     for (let i = stack.length - 2; i >=0; i--) {
-        const stackEle = stack[i];
-        const val = stackEle[0];
-        const index = stackEle[1];
-
-        if( i === startWallIndex ){
-
-            let height = wallVal - val - bottom;
-            height = height < 0 ? 0 : height;
-            result += height * (wallIndex-index);
-            stopIndex = i;
+        const eleData = stack[i];
+        const val = eleData[0];
+        if( val >= endWallVal ){
+            startStackIndex = i;
             break;
         }
+    }
 
-        if( val < wallVal ){
-            let height = wallVal - val - bottom;
-            height = height < 0 ? 0 : height;
-            result += height * (wallIndex-index);
+    if( stack[startStackIndex] ){
+        startWallVal = stack[startStackIndex][0];
+        startWallIndex = stack[startStackIndex][1];
+    }else{
+        return result;
+    }
+
+    console.log("startWallVal",startWallVal  );
+    console.log("startStackIndex",startStackIndex  );
+
+    let wallHeight = 0;
+    if( startWallVal > endWallVal ){
+        wallHeight = endWallVal;
+        bottomInfo.val = wallHeight;
+        bottomInfo.index = endWallIndex;
+    }else if(startWallVal < endWallVal){
+        wallHeight = startWallVal;
+        bottomInfo.val = 0;
+        bottomInfo.index = -1;
+    }else{
+        wallHeight = startWallVal;
+        if( startStackIndex === 0){
+            bottomInfo.val = 0;
         }else{
-            stopIndex = i;
-            break;
+            bottomInfo.val = wallHeight;
+            bottomInfo.index = endWallIndex;
         }
     }
-    console.log("stopIndex",stopIndex)
-    if( stopIndex === -1 ) return 0;
-    stack.length = stopIndex+1;
-    console.log(stack)
+
+    console.log("wallHeight",wallHeight  );
+
+    //计算区间蓄水
+    for (let j = startStackIndex; j < stack.length-1; j++) {
+        const eleInfo = stack[j];
+        const eleVal = eleInfo[0];
+        const eleIndex = eleInfo[1];
+
+        const nextEleInfo = stack[j+1];
+        const nextEleVal = nextEleInfo[0];
+        const nextEleIndex = nextEleInfo[1];
+
+        //距离
+        const steps = nextEleIndex - eleIndex;
+        
+        const middleWater = (steps - 1) * (wallHeight - bottomVal);
+        
+        if( nextEleIndex > bottomIndex ){
+            bottomVal = 0;
+            bottomIndex = -1;
+        }
+        let height = Math.min( nextEleVal, wallHeight );
+        height = Math.max( height, bottomVal );
+        const topWater = wallHeight - height;
+        let water = middleWater + topWater;
+        water = water < 0 ? 0:water;
+        result += water;
+    }
+    if(startWallVal > endWallVal){
+        //除了开始位置留下
+        stack.splice(startStackIndex+1);
+    }else if( startWallVal === endWallVal && startStackIndex > 0){
+        stack.splice(startStackIndex);
+    }else{
+        //只留最后一个
+        stack.splice(0, endStackIndex); 
+    }
     return result;
 }
 // @lc code=end
 
-//trap([0,1,0,2,1,0,1,3,2,1,2,1]);
+const result = trap([0,7,1,4,6]);
+//const result = trap([5,2,1,2,1,5]);
+//const result = trap([0,1,0,2,1,0,1,3,2,1,2,1]);
 
-const result = trap([0,1,0,2]);
-console.log(result, result);
+//const result = trap([0,1,0,2]);
+console.log("result", result);
