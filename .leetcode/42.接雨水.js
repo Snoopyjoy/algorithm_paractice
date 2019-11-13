@@ -15,15 +15,17 @@ var trap = function(height) {
     height.forEach( (val, index)=>{
         while( stack.length > 0 && val > height[ stack[stack.length-1] ] ){
             const tail = stack[stack.length-1];
+            //前栈顶中的凹地出栈
             stack.pop();
             if( stack.length === 0 ){
                 break;
             }
+            //计算前一个与当前栈顶中的凹地中可以存储的雨水
             const prev = stack[stack.length-1];
-            const steps = index - prev - 1;
+            const steps = index - prev - 1; //长
             const prevH = height[prev];
-            const h = Math.min( prevH, val );
-            const bottom = height[tail];
+            const h = Math.min( prevH, val );   //墙高
+            const bottom = height[tail];    //凹地高度
 
             result += (h - bottom) * steps;
         }
