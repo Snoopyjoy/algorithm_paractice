@@ -4,8 +4,6 @@ function heapSort(arr){
     for( let i = (((arr.length-2)/2)>>0); i >= 0; i-- ){
         downAjust( arr, i, arr.length );
     }
-    console.log(arr);
-
 
     for( let j = arr.length - 1; j > 0; j--){
         //从最大堆中取出堆顶最大值 与最后的元素交换位置
@@ -38,6 +36,22 @@ function downAjust(arr, parentIndex, len){
     arr[parentIndex] = temp;
 }
 
-let arr =  [3,1,3,4,5,1,9,2];
-heapSort( arr );
-console.log(arr);
+// let arr =  [3,1,3,4,5,1,9,2];
+// heapSort( arr );
+// console.log(arr);
+
+function createRndArr( len ){
+    let result = [];
+    for (let index = 0; index < len; index++) {
+        result.push( (Math.random() * len)>>0 );
+    }
+    return result;
+}
+let arr = createRndArr( 1000 );
+
+console.time("heap_sort");
+for (let index = 0; index < 1000; index++) {
+    let arr1 = arr.concat([]);
+    heapSort( arr1 );
+}
+console.timeEnd("heap_sort");

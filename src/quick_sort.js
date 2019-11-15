@@ -82,6 +82,22 @@ function quickSort2(arr, startIndex, endIndex){
         }
     }
 }
-let arr =  [3,1,3,4,5,1,2];
-quickSort2( arr, 0, 6);
-console.log(arr);
+// let arr =  [3,1,3,4,5,1,2];
+// quickSort2( arr, 0, 6);
+// console.log(arr);
+
+function createRndArr( len ){
+    let result = [];
+    for (let index = 0; index < len; index++) {
+        result.push( (Math.random() * len)>>0 );
+    }
+    return result;
+}
+let arr = createRndArr( 1000 );
+
+console.time("quick_sort");
+for (let index = 0; index < 1000; index++) {
+    let arr1 = arr.concat([]);
+    quickSort2( arr1 );
+}
+console.timeEnd("quick_sort");
