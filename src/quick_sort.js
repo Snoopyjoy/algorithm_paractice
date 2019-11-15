@@ -38,15 +38,15 @@ function partition( arr, startIndex, endIndex){
     return left;
 }
 
-let arr =  [3,1,3,4,5,1,2];
-quickSort( arr, 0, 6);
-console.log(arr);
+// let arr =  [3,1,3,4,5,1,2];
+// quickSort( arr, 0, 6);
+// console.log(arr);
 
 //单边循环
 function partition1( arr, startIndex, endIndex ){
     const pivot = arr[startIndex];
     let mark = startIndex;
-    for (let index = startIndex + 1; index < endIndex; index++) {
+    for (let index = startIndex + 1; index <= endIndex; index++) {
         if( arr[index] < pivot ){
             mark++;
             let temp = arr[mark];
@@ -58,3 +58,30 @@ function partition1( arr, startIndex, endIndex ){
     arr[mark] = pivot;
     return mark;
 }
+
+//非递归 用栈代替递归
+function quickSort2(arr, startIndex, endIndex){
+    const stack = [{
+        sid: startIndex,
+        eid: endIndex
+    }];
+    while( stack.length > 0 ){
+        const {sid, eid} = stack.pop();
+        let pivotIndex = partition1( arr, sid, eid );
+        if( sid < pivotIndex - 1 ){
+            stack.push( {
+                sid,
+                eid: pivotIndex - 1
+            } );
+        }
+        if( pivotIndex + 1 < eid ){
+            stack.push( {
+                sid: pivotIndex + 1,
+                eid
+            } );
+        }
+    }
+}
+let arr =  [3,1,3,4,5,1,2];
+quickSort2( arr, 0, 6);
+console.log(arr);
