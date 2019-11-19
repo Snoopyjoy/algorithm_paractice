@@ -20,8 +20,8 @@ var threeSum = function(nums) {
     let right = nums.length - 1;
     while( i < nums.length - 2 && nums[i] <= 0){
         while(left < right){
+            if (nums[i] * nums[right] > 0) break; 
             let sum = nums[i] + nums[left] + nums[right];
-            //console.log(i,left ,right, sum);
             if( sum === 0 ){
                 result.push(
                     [ nums[i], nums[left], nums[right] ]
