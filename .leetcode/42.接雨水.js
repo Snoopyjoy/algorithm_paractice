@@ -13,7 +13,9 @@ var trap = function(height) {
     const stack = [];      //索引
     let result = 0;
     height.forEach( (val, index)=>{
+        //如果当前高度大于栈顶的元素
         while( stack.length > 0 && val > height[ stack[stack.length-1] ] ){
+            //栈顶凹地
             const tail = stack[stack.length-1];
             //前栈顶中的凹地出栈
             stack.pop();
