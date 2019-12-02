@@ -14,43 +14,31 @@ var findMedianSortedArrays = function(A, B) {
     let m = A.length;
     let n = B.length;
     if(m>n){    //长度小的数组为A
-        let temp = m;
-        m = n;
-        n = temp;
-        let temp1 = A;
-        A = B;
-        B = temp1;
+        return findMedianSortedArrays(B, A);
     }
-    let iMin = 0, iMax = m;
-    // 两个数组的中间长度（奇数为中间位置+1）（偶数为偏右的位置）
-    let halfLen = ((m+n+1)/2)>>0;
-    //双指针
-    while(iMin <= iMax){
-        //i 为A数组的中间位置（偶数长度为偏右的位置）
-        let i = ((iMin + iMax)/2)>>0;
-        //j为拼接后的数组的中间位置和A数组中心位置的偏移量
-        let j = halfLen - i;
-        if( i < iMax && B[j-1] > A[i] ){
-           iMin = i + 1;
-        }
-        else if( i > iMin && A[i-1] > B[j] ){
-            iMax = i -1;
-        }
-        else{
-            let maxLeft = 0;
-            if(i==0){ maxLeft = B[j-1]; }
-            else if(j==0){ maxLeft = A[i-1]; }
-            else{ maxLeft = Math.max(A[i-1], B[j-1]); }
-            if( (m+n)%2 === 1 ) return maxLeft;
-            let minRight = 0;
-            if(i == m){ minRight = B[j]; }
-            else if( j == n ){ minRight = A[i]; }
-            else{ minRight = Math.min(B[j], A[i]); }
-            
-            return ( maxLeft + minRight ) / 2;
+    let maxLeft1, minRight1, maxLeft2, minRight2,
+    c1,c2,lo = 0, hi = 2*m;
+    while( lo <= hi ){
+        //二分法求得第一个数组的切分位置
+        c1 = ((lo + hi)/2)>>0;
+        c2 = m + n - c1;
+        maxLeft1 = c1 === 0 ? -Number.MAX_VALUE : A[((c1  - 1)/2)>>0];
+        minRight1 = c1 === 2*m ? Number.MAX_VALUE : A[(c1/2)>>0];
+        maxLeft2 = c2 === 0 ? -Number.MAX_VALUE : B[((c2  - 1)/2)>>0];
+        minRight2 = c2 === 2*n ? Number.MAX_VALUE : B[(c2/2)>>0];
+
+        // 目标 maxLeft1 < minRight1, maxLeft2 < minRight2
+        if(maxLeft2 > minRight1 ){ //切分位置需要左移动
+            lo = c1 + 1;
+        }else if(  maxLeft1 > minRight2 ){//切分位置需要向右移动
+            hi = c1 - 1;
+        }else{
+            break;
         }
     }
-    return 0;
+    return (Math.max(maxLeft2,maxLeft1) + 
+    Math.min(minRight1, minRight2))/2;
 };
 // @lc code=end
 
+//console.log( findMedianSortedArrays([3],[-2,-1]) )
