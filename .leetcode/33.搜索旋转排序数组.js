@@ -11,6 +11,24 @@
  * @return {number}
  */
 var search = function(nums, target) {
+    let low = 0;
+    let high = nums.length - 1;
+    while (low < high) {
+        let mid = ((low + high) / 2)>>0;
+        if ( xor( xor( nums[0] > target, nums[0] > nums[mid]) , target > nums[mid] ) ) {
+            low = mid + 1;
+        }else{
+            high = mid;
+        }
+    }
+    return low === high && nums[low] === target ? low : -1;
+};
+
+function xor(a, b){
+    return a !== b;
+}
+
+var search1 = function(nums, target) {
     // 先转为有序数组
     const revPos = findRevPos(nums, 0, nums.length);
     const right = nums.splice(0,revPos+1);
