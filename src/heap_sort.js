@@ -3,6 +3,7 @@ function heapSort(arr){
     //构建最大堆
     for( let i = (((arr.length-2)/2)>>0); i >= 0; i-- ){
         downAjust( arr, i, arr.length );
+        console.log(arr);
     }
 
     for( let j = arr.length - 1; j > 0; j--){
@@ -47,10 +48,10 @@ function createRndArr( len ){
     }
     return result;
 }
-let arr = createRndArr( 1000 );
+let arr = createRndArr( 10 );
 
 console.time("heap_sort");
-for (let index = 0; index < 1000; index++) {
+for (let index = 0; index < 1; index++) {
     let arr1 = arr.concat([]);
     heapSort( arr1 );
 }

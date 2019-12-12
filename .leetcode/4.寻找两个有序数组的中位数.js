@@ -36,6 +36,7 @@ var findMedianSortedArrays = function(A, B) {
             break;
         }
     }
+    Array.isArray
     return (Math.max(maxLeft2,maxLeft1) + 
     Math.min(minRight1, minRight2))/2;
 };
