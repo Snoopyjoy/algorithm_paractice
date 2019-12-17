@@ -1,3 +1,5 @@
+package leetcode
+
 /*
  * @lc app=leetcode.cn id=26 lang=golang
  *
@@ -6,8 +8,8 @@
 
 // @lc code=start
 func removeDuplicates(nums []int) int {
-	numLen := len( nums )
-    if numLen <= 1{
+	numLen := len(nums)
+	if numLen <= 1 {
 		return numLen
 	}
 	cursor := 0
@@ -18,8 +20,8 @@ func removeDuplicates(nums []int) int {
 				nums[cursor] = nums[index]
 			}
 		}
-	}  
-	return cursor+1
+	}
+	return cursor + 1
 }
-// @lc code=end
 
+// @lc code=end
