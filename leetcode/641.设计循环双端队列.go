@@ -1,7 +1,5 @@
 package leetcode
 
-import "fmt"
-
 /*
  * @lc app=leetcode.cn id=641 lang=golang
  *
@@ -24,7 +22,7 @@ type LinkedList struct {
 }
 
 /** Initialize your data structure here. Set the size of the deque to be k. */
-func Constructor(k int) MyCircularDeque {
+func NewConstructor(k int) MyCircularDeque {
 	res := MyCircularDeque{
 		Head:   nil,
 		Tail:   nil,
@@ -134,24 +132,3 @@ func (this *MyCircularDeque) IsFull() bool {
  * param_8 := obj.IsFull();
  */
 // @lc code=end
-
-// Start 测试循环双端队列.
-func Start() {
-	obj := Constructor(2)
-	param1 := obj.InsertFront(1)
-	fmt.Println(param1)
-	param2 := obj.InsertLast(2)
-	fmt.Println(param2)
-	param3 := obj.DeleteFront()
-	fmt.Println(param3)
-	param4 := obj.DeleteLast()
-	fmt.Println(param4)
-	param5 := obj.GetFront()
-	fmt.Println(param5)
-	param6 := obj.GetRear()
-	fmt.Println(param6)
-	param7 := obj.IsEmpty()
-	fmt.Println(param7)
-	param8 := obj.IsFull()
-	fmt.Println(param8)
-}
