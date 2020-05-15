@@ -7,57 +7,52 @@ package leetcode
  */
 
 // @lc code=start
-
-type trieMap map[rune](interface{})
-
-var endTag rune = []rune("#")[0]
-
 type Trie struct {
-	tMap trieMap
+	children map[rune]*Trie
+	hasEnd   bool
 }
 
 /** Initialize your data structure here. */
 func TrieConstructor() Trie {
 	t := Trie{}
-	t.tMap = trieMap{}
+	t.children = map[rune]*Trie{}
 	return t
 }
 
 /** Inserts a word into the trie. */
 func (this *Trie) Insert(word string) {
-	tMap := this.tMap
+	node := this
 	for _, c := range word {
-		if cMap, ok := tMap[c]; ok {
-			tMap = cMap.(trieMap)
+		if ct, ok := node.children[c]; ok {
+			node = ct
 		} else {
-			cMap = trieMap{}
-			tMap[c] = cMap
-			tMap = cMap.(trieMap)
+			newNode := TrieConstructor()
+			node.children[c] = &newNode
+			node = &newNode
 		}
 	}
-	tMap[endTag] = true
+	node.hasEnd = true
 }
 
 /** Returns if the word is in the trie. */
 func (this *Trie) Search(word string) bool {
-	tMap := this.tMap
+	node := this
 	for _, c := range word {
-		if cMap, ok := tMap[c]; ok {
-			tMap = cMap.(trieMap)
+		if ct, ok := node.children[c]; ok {
+			node = ct
 		} else {
 			return false
 		}
 	}
-	_, ok := tMap[endTag]
-	return ok
+	return node.hasEnd
 }
 
 /** Returns if there is any word in the trie that starts with the given prefix. */
 func (this *Trie) StartsWith(prefix string) bool {
-	tMap := this.tMap
+	node := this
 	for _, c := range prefix {
-		if cMap, ok := tMap[c]; ok {
-			tMap = cMap.(trieMap)
+		if ct, ok := node.children[c]; ok {
+			node = ct
 		} else {
 			return false
 		}
