@@ -11,28 +11,20 @@ func isAnagram(s string, t string) bool {
 	if len(s) != len(t) {
 		return false
 	}
-	var cacheArr [26]int
-	sLen := len(s)
-	i := 0
-	for {
-		if i >= sLen {
-			break
-		}
-		sIndex := s[i] - 97
-		tIndex := t[i] - 97
-		if sIndex != tIndex {
-			cacheArr[sIndex]++
-			cacheArr[tIndex]--
-		}
-		i++
+	cache := make(map[rune]int, 26)
+	for _, v := range s {
+		cache[v]++
 	}
-	for _, val := range cacheArr {
-		if val != 0 {
+	for _, v := range t {
+		cache[v]--
+	}
+	for _, v := range cache {
+		if v != 0 {
 			return false
 		}
 	}
-
 	return true
+
 }
 
 // @lc code=end'

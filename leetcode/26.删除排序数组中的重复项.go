@@ -8,20 +8,14 @@ package leetcode
 
 // @lc code=start
 func removeDuplicates(nums []int) int {
-	numLen := len(nums)
-	if numLen <= 1 {
-		return numLen
-	}
-	cursor := 0
-	for index := 1; index < numLen; index++ {
-		if nums[cursor] != nums[index] {
-			cursor++
-			if cursor != index {
-				nums[cursor] = nums[index]
-			}
+	slow := 1
+	for i := 1; i < len(nums); i++ {
+		if nums[i] != nums[i-1] {
+			nums[slow] = nums[i]
+			slow++
 		}
 	}
-	return cursor + 1
+	return slow
 }
 
 // @lc code=end

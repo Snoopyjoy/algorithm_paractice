@@ -18,7 +18,9 @@ import "container/list"
  * }
  */
 func preorderTraversal(root *TreeNode) []int {
-	return preDfs(root, []int{})
+	ret := []int{}
+	preDfs(root, &ret)
+	return ret
 	//return preStackWay(root)
 }
 
@@ -50,15 +52,14 @@ func preStackWay(root *TreeNode) []int {
 }
 
 // 递归
-func preDfs(node *TreeNode, result []int) []int {
+func preDfs(node *TreeNode, result *[]int) {
 	if node == nil {
-		return result
+		return
 	}
-	leftResult := preDfs(node.Left, result)
-	rightResult := preDfs(node.Right, result)
-	result = append(result, node.Val)
-	result = append(result, leftResult...)
-	return append(result, rightResult...)
+	*result = append(*result, node.Val)
+	preDfs(node.Left, result)
+	preDfs(node.Right, result)
+	return
 }
 
 // @lc code=end

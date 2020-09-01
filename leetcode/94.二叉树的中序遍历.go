@@ -25,7 +25,9 @@ type TreeNode struct {
  * }
  */
 func inorderTraversal(root *TreeNode) []int {
-	// return dfs(root, []int{})
+	// ret := []int{}
+	// dfs(root, &ret)
+	// return ret
 	return stackWay(root)
 }
 
@@ -34,15 +36,9 @@ func stackWay(root *TreeNode) []int {
 	stack := list.New()
 	result := []int{}
 	curNode := root
-	for {
-		if stack.Len() == 0 && curNode == nil {
-			break
-		}
+	for stack.Len() > 0 || curNode != nil {
 		// 左节点入栈
-		for {
-			if curNode == nil {
-				break
-			}
+		for curNode != nil {
 			stack.PushBack(curNode)
 			curNode = curNode.Left
 		}
@@ -59,16 +55,14 @@ func stackWay(root *TreeNode) []int {
 }
 
 // 递归遍历
-func dfs(node *TreeNode, result []int) []int {
+func dfs(node *TreeNode, result *[]int) {
 	if node == nil {
-		return result
+		return
 	}
 
-	leftResult := dfs(node.Left, result)
-	rightResult := dfs(node.Right, result)
-	result = append(result, leftResult...)
-	result = append(result, node.Val)
-	return append(result, rightResult...)
+	dfs(node.Left, result)
+	*result = append(*result, node.Val)
+	dfs(node.Right, result)
 }
 
 // @lc code=end
