@@ -2,6 +2,7 @@ package leetcode.155
 
 import (
 	"fmt"
+	"container/list"
 )
 
 /*
@@ -12,99 +13,68 @@ import (
 
 // @lc code=start
 
-type ListItem struct {
-	Value int
-	Next *ListItem
-	Prev *ListItem
-}
-
-type List struct {
-	Head *ListItem
-	Tail *ListItem
-}
-
-func (l *List)Push(v int){
-	i := &ListItem{
-		Value:v,
-	}
-	if l.Head == nil {
-		l.Head = i
-	}
-	if l.Tail == nil {
-		l.Tail = i
-	} else {
-		i.Prev = l.Tail
-		l.Tail.Next = i
-		l.Tail = i
-	}
-}
-
-func (l *List)Pop() {
-	if l.IsEmpty() {
-		return
-	}
-	if l.Tail.Prev == nil {
-		l.Tail = nil
-		return
-	}
-	l.Tail, l.Tail.Prev.Next = l.Tail.Prev, nil
-}
-
-func (l *List)IsEmpty() bool {
-	return l.Tail == nil
-}
-
 type MinStack struct {
-	container *List
-	helper *List
+	container *list.List
+	helper *list.List
 }
 
 
 /** initialize your data structure here. */
 func Constructor() MinStack {
 	return MinStack{
-		container: &List{},
-		helper: &List{},
+		container: list.New(),
+		helper: list.New(),
 	}
 }
 
-
 func (this *MinStack) Push(x int)  {
-	this.container.Push(x)
-	lt := this.helper.Tail
-	if lt == nil {
-		this.helper.Push(x)
+	this.container.PushBack(x)
+	if this.helper.Len() == 0 {
+		this.helper.PushBack(x)
 		return
 	}
-	if x <= lt.Value{
-		this.helper.Push(x)
+	bv, _ := this.helper.Back().Value.(int)
+	if x > bv {
+		return
 	}
+	this.helper.PushBack(x)
+
 }
 
 
 func (this *MinStack) Pop()  {
-	tail := this.container.Tail
-	this.container.Pop()
-	htail := this.helper.Tail
-	if tail != nil && htail != nil && tail.Value == htail.Value{
-		this.helper.Pop()
+	if this.container.Len() == 0 {
+		return
 	}
+	bv, _ := this.container.Back().Value.(int)
+	if this.helper.Len() == 0 {
+		return
+	}
+	hbv, _ := this.helper.Back().Value.(int)
+	this.container.Remove(this.container.Back())
+	if bv == hbv {
+		this.helper.Remove(this.helper.Back())
+	}
+
 }
 
 
 func (this *MinStack) Top() int {
-	if this.container.Tail == nil {
+	if this.container.Len() == 0 {
 		return 0
 	}
-	return this.container.Tail.Value
+	bv, _ := this.container.Back().Value.(int)
+	return bv
 }
 
 
 func (this *MinStack) GetMin() int {
-	if this.helper.Tail == nil {
+	if this.helper.Len() == 0 {
 		return 0
 	}
-	return this.helper.Tail.Value
+	bv, _ := this.helper.Back().Value.(int)
+	return bv
+
 }
 
 

@@ -33,48 +33,59 @@ func (this *Codec) serialize(root *TreeNode) string {
 		return ""
 	}
 	defer this.sb.Reset()
-	//this.sb.WriteString("[")
-	this.serializeHelper(root)
-	//this.sb.WriteString("]")
-	return this.sb.String()
-}
-func (this *Codec) serializeHelper(root *TreeNode) {
-	if root == nil {
-		this.sb.WriteString("null,")
-		return
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		n := queue[0]
+		queue = queue[1:]
+		if n != nil {
+			this.sb.WriteString(strconv.Itoa(n.Val))
+			queue = append(queue, n.Left)
+			queue = append(queue, n.Right)
+		} else {
+			this.sb.WriteString("null")
+		}
+		this.sb.WriteString(",")
 	}
-	this.sb.WriteString(strconv.FormatInt(int64(root.Val), 10))
-	this.sb.WriteString(",")
-	this.serializeHelper(root.Left)
-	this.serializeHelper(root.Right)
+
+	return this.sb.String()
 }
 
 // Deserializes your encoded data to tree.
 func (this *Codec) deserialize(data string) *TreeNode {
-	allNodes := strings.Split(data, ",")
-	if len(allNodes) == 0 {
+	nodes := strings.Split(data, ",")
+	if len(nodes) == 0 {
 		return nil
 	}
-	// // fmt.Println("allNodes", allNodes)
-	counter := 0
-	return this.deserializeHelper(allNodes, &counter)
-}
-func (this *Codec) deserializeHelper(allNodes []string, counter *int) *TreeNode {
-	if *counter >= len(allNodes) {
+	if nodes[0] == "" || nodes[0] == "null" {
 		return nil
 	}
-	// fmt.Println(*counter)
-	if allNodes[*counter] == "null" || allNodes[*counter] == "" {
-		*counter = *counter + 1
-		return nil
-	}
-	v, _ := strconv.ParseInt(allNodes[*counter], 10, 64)
+	z, _ := strconv.Atoi(nodes[0])
 	ret := &TreeNode{
-		Val: int(v),
+		Val: z,
 	}
-	*counter = *counter + 1
-	ret.Left = this.deserializeHelper(allNodes, counter)
-	ret.Right = this.deserializeHelper(allNodes, counter)
+	layer := []*TreeNode{ret}
+	i := 1
+	for i < len(nodes) && len(layer) > 0 {
+		node := layer[0]
+		layer = layer[1:]
+		left := nodes[i]
+		right := nodes[i+1]
+		if left != "null" && left != "" {
+			v, _ := strconv.Atoi(left)
+			node.Left = &TreeNode{
+				Val: v,
+			}
+			layer = append(layer, node.Left)
+		}
+		if right != "null" && right != "" {
+			v, _ := strconv.Atoi(right)
+			node.Right = &TreeNode{
+				Val: v,
+			}
+			layer = append(layer, node.Right)
+		}
+		i += 2
+	}
 	return ret
 }
 

@@ -18,24 +18,27 @@ package leetcode
 func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 
 	//return findByPath(root, p, q)
-
-	if root == nil || p == root || q == root {
+	if root == nil {
+		return nil
+	}
+	if root == p {
+		return p
+	}
+	if root == q {
+		return q
+	}
+	leftAc := lowestCommonAncestor(root.Left, p, q)
+	rightAc := lowestCommonAncestor(root.Right, p, q)
+	if leftAc != nil && rightAc != nil {
 		return root
 	}
-
-	left := lowestCommonAncestor(root.Left, p, q)
-
-	right := lowestCommonAncestor(root.Right, p, q)
-
-	if left != nil && right != nil {
-		// 左右子树中都找到了目标 说明当前节点是公共祖先
-		return root
-	} else if left == nil {
-		// 两个目标在子树中 子节点就是公共祖先
-		return right
+	if rightAc == nil {
+		return leftAc
 	}
-	return left
+	return rightAc
 }
+
+// @lc code=end
 
 // 根据路径查找的方法
 func findByPath(root, p, q *TreeNode) *TreeNode {
@@ -88,5 +91,3 @@ func findPath(node, target *TreeNode, path []*TreeNode) []*TreeNode {
 	}
 	return path
 }
-
-// @lc code=end
