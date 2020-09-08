@@ -1,4 +1,4 @@
-package leetcode
+package leetcode.46
 
 /*
  * @lc app=leetcode.cn id=46 lang=golang
@@ -8,32 +8,26 @@ package leetcode
 
 // @lc code=start
 func permute(nums []int) [][]int {
-	numLen := len(nums)
-	if numLen == 0 {
-		return [][]int{}
-	} else if numLen == 1 {
-		return [][]int{[]int{nums[0]}}
+	ret := [][]int{}
+	if len(nums) == 0 {
+		return ret
 	}
-	baseNum := nums[0]
-	result := [][]int{}
-	otherNums := nums[1:]
-	middleCombines := permute(otherNums)
+	if len(nums) == 1{
+		return [][]int{nums}
+	}
 
-	for _, mc := range middleCombines {
-		// 头部插入
-		result = append(result, append([]int{baseNum}, mc...))
-		// 尾部插入
-		result = append(result, append(mc, baseNum))
-		// 中间插入
-		for i := 1; i < len(mc); i++ {
-			// 直接用 mc[0:i] 会导致后续操作完mc的值变为temp的前几位 ????
-			leftSide := append([]int{}, mc[0:i]...)
-			rightSide := append([]int{baseNum}, mc[i:]...)
-			temp := append(leftSide, rightSide...)
-			result = append(result, temp)
+	f := nums[0]
+	children := permute(nums[1:])
+	for _, v := range children {
+		for i := 0; i < len(v) +1; i++ {
+			temp := make([]int, 0, len(v)+1)
+			temp = append(temp, v[:i]...)
+			temp = append(temp, f)
+			temp = append(temp, v[i:]...)
+			ret = append(ret, temp)
 		}
 	}
-	return result
+	return ret
 }
 
 // @lc code=end
