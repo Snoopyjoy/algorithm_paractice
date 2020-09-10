@@ -1,4 +1,4 @@
-package leetcode
+package leetcode.22
 
 /*
  * @lc app=leetcode.cn id=22 lang=golang
@@ -8,22 +8,22 @@ package leetcode
 
 // @lc code=start
 func generateParenthesis(n int) []string {
-	ret := &[]string{}
-	gen(n, 0, 0, "", ret)
-	return *ret
-}
 
-func gen(n, left, right int, midR string, ret *[]string) {
-	if left == right && left == n {
-		*ret = append(*ret, midR)
-		return
+	ret := []string{}
+	var helper func(l,r int, s string)
+	helper = func(l,r int, s string) {
+		if l == n && r == n {
+			ret = append(ret, s)
+			return
+		}
+		if l < n {
+			helper(l+1,r,s+"(")
+		}
+		if r < l {
+			helper(l,r+1,s+")")
+		}
 	}
-	if left < n {
-		gen(n, left+1, right, midR+"(", ret)
-	}
-	if right < left {
-		gen(n, left, right+1, midR+")", ret)
-	}
+	helper(0,0,"")
+	return ret
 }
-
 // @lc code=end
