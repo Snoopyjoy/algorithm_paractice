@@ -10,17 +10,17 @@ package leetcode.22
 func generateParenthesis(n int) []string {
 
 	ret := []string{}
-	var helper func(l,r int, s string)
-	helper = func(l,r int, s string) {
+	var helper func(int,int,string) 
+	helper = func(l, r int, s string){
 		if l == n && r == n {
 			ret = append(ret, s)
 			return
 		}
 		if l < n {
-			helper(l+1,r,s+"(")
+			helper(l+1, r, s + "(")
 		}
 		if r < l {
-			helper(l,r+1,s+")")
+			helper(l, r+1, s + ")")
 		}
 	}
 	helper(0,0,"")
