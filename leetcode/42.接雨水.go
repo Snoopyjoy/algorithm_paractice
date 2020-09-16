@@ -9,26 +9,25 @@ func trap(height []int) int {
 	if len(height) < 3 {
 		return 0
 	}
-	stack := make([]int, 0, len(height)+1)
-	stack = append(stack, -1)
+	stack := []int{-1}
 	ret := 0
-	for i, v := range height {
-		for len(stack) > 1 && v > height[stack[len(stack)-1]] {
-			top := stack[len(stack)-1]
+	for i, h := range height {
+		for len(stack) > 1 && h >= height[stack[len(stack)-1]] {
+			topIndex := stack[len(stack)-1]
 			stack = stack[:len(stack)-1]
 			if len(stack) < 2 {
 				break
 			}
-			sec := stack[len(stack)-1]
-			h := v
-			if v > height[sec] {
-				h = height[sec]
+			preIndex := stack[len(stack)-1]
+			preH := height[preIndex]
+			if h > preH {
+				h = preH
 			}
-			ret += (h - height[top]) * (i - sec - 1)
+			ret += (i - preIndex - 1) * (h - height[topIndex])
 		}
-
 		stack = append(stack, i)
 	}
+
 	return ret
 }
 

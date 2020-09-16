@@ -8,28 +8,20 @@ package leetcode
 
 // @lc code=start
 func combine(n int, k int) [][]int {
-	return combineStep(1, n, k)
-}
-
-func combineStep(startN int, n int, k int) [][]int {
-	if k < 1 {
-		return [][]int{}
+	ret := [][]int{}
+	if k > n || k < 1{
+		return ret
 	}
-	result := [][]int{}
-	for i := startN; i < n-k+2; i++ {
-		// 获取子组合值
-		middleResults := combineStep(i+1, n, k-1)
-		if len(middleResults) > 0 {
-			for _, middleArr := range middleResults {
-				middleArr = append(middleArr, i)
-				result = append(result, middleArr)
-			}
-		} else {
-			result = append(result, []int{i})
+	for i := n; i>=k; i-- {
+		childComb := combine(i-1, k-1)
+		for _,c := range childComb {
+			ret = append(ret, append(c,i))
 		}
-
+		if len(childComb) == 0 {
+			ret = append(ret, []int{i})
+		}
 	}
-	return result
+	return ret
 }
 
 // @lc code=end
