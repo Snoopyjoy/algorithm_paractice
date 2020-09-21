@@ -1,4 +1,4 @@
-package leetcode
+package leetcode.105
 
 /*
  * @lc app=leetcode.cn id=105 lang=golang
@@ -16,48 +16,32 @@ package leetcode
  * }
  */
 func buildTree(preorder []int, inorder []int) *TreeNode {
-	if preorder == nil || len(preorder) == 0 {
+	if len(preorder) == 0 {
 		return nil
 	}
-	root := &TreeNode{
-		Val:   preorder[0],
-		Left:  nil,
-		Right: nil}
-	// 根节点的在中序遍历中的位置
-	rootInIndex := findIndex(inorder, preorder[0])
-
-	// fmt.Printf("rootInIndex %d", rootInIndex)
-	// 中序左子树
-	leftInOrder := inorder[0:rootInIndex]
-	// 中序右子树
-	var rightInOrder []int
-	if rootInIndex < len(inorder)-1 {
-		rightInOrder = inorder[rootInIndex+1:]
-	}
-	// 左右前序遍历子节点值
-	var leftPreOrder, rightPreOrder []int
-	// 存在左子树
-	if rootInIndex > 0 {
-		leftPreOrder = preorder[1 : rootInIndex+1]
-		rightPreOrder = preorder[rootInIndex+1:]
-	} else {
-		rightPreOrder = preorder[1:]
-	}
-
-	root.Left = buildTree(leftPreOrder, leftInOrder)
-	root.Right = buildTree(rightPreOrder, rightInOrder)
-
-	return root
-}
-
-func findIndex(arr []int, target int) int {
-	index := -1
-	for i, val := range arr {
-		if val == target {
-			return i
+	rootVal := preorder[0]
+	rootInorderIndex := -1
+	for i, v := range inorder {
+		if v == rootVal {
+			rootInorderIndex = i
+			break
 		}
 	}
-	return index
-}
+	leftInorder := inorder[:rootInorderIndex]
+	rightInorder := inorder[rootInorderIndex+1:]
 
+	var rightPreorder []int
+	var leftPreorder []int
+	if len(leftInorder) > 0 {
+		leftPreorder = preorder[1:rootInorderIndex+1]
+	}
+	rightPreorder = preorder[rootInorderIndex+1:]
+	ret := &TreeNode{
+		Val: rootVal,
+		Left: buildTree(leftPreorder, leftInorder),
+		Right: buildTree(rightPreorder, rightInorder),
+	}
+
+	return ret
+}
 // @lc code=end
