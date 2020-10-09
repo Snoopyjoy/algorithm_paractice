@@ -6,56 +6,54 @@ package leetcode.51
  */
 
 // @lc code=start
-func fillRow(rows []int, n int) []string {
-	ret := make([]string, n)
-	for j, idx := range rows {
-		dd := make([]byte, n)
-		for i:= 0; i < n;i++ {
-			if i == idx {
-				dd[i] = 'Q'
-			} else {
-				dd[i] = '.'
-			}
-		}
-		ret[j] =string(dd)
-	}
-	return ret
-}
-
 func solveNQueens(n int) [][]string {
 	ret := [][]string{}
+	angle45 := make(map[int]bool, 2*n)
+	angle135 := make(map[int]bool, 2*n)
+	colData := make([]bool, n)
 
-	cols := make(map[int]bool, n)
-	a45 := make(map[int]bool, 2*n)
-	a135 := make(map[int]bool, 2*n)
-	rowRst := make([]int, n)
-
-	var canput = func(row, col int) bool {
-		return !cols[col] && !a45[row+col] && !a135[row-col]
+	canPut := func(row, col int)bool{
+		return !angle45[row+col] && !angle135[row-col] && !colData[col]
 	}
-	var dfs func(row int)
-	dfs = func(row int) {
-		if row == n {
-			ret = append(ret, fillRow(rowRst, n))
+
+	getLine := func(col int)string {
+		bts := []byte{}
+		for i:=0; i < n;i++ {
+			if col == i {
+				bts = append(bts, 'Q')
+			} else {
+				bts = append(bts, '.')
+			}
 		}
-		for i := 0; i < n; i++ {
-			if !canput(row, i) {
+		return string(bts)
+	}
+
+	var helper func(row int, grids []string)
+	helper = func(row int, grids []string) {
+		if row == n {
+			ret = append(ret, grids)
+			return
+		}
+
+		for col:=0; col < n; col++ {
+			if !canPut(row, col) {
 				continue
 			}
-			cols[i] = true
-			a45[row+i] = true
-			a135[row-i] = true
-			rowRst[row] = i
-			dfs(row+1)
-			cols[i] = false
-			a45[row+i] = false
-			a135[row-i] = false
-			rowRst[row] = 0
+			colData[col] = true
+			angle45[row+col] = true
+			angle135[row-col] = true
+			cgrids := make([]string, 0, len(grids)+1)
+			cgrids = append(cgrids, grids...)
+			cgrids = append(cgrids, getLine(col))
+			helper(row+1, cgrids)
+			colData[col] = false
+			angle45[row+col] = false
+			angle135[row-col] = false
 		}
 	}
-	dfs(0)
+
+	helper(0, []string{})
+
 	return ret
 }
-
 // @lc code=end
-
