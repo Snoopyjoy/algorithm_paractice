@@ -16,13 +16,13 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
-	dummy := &ListNode{
+	d := &ListNode{
 		Val:  0,
 		Next: head,
 	}
-	// 上一段的尾部
-	pre := dummy
-	cur := dummy
+	cur := d
+	pre := d
+
 	for cur != nil && pre != nil {
 		for i := 0; i < k && cur != nil; i++ {
 			cur = cur.Next
@@ -30,26 +30,26 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 		if cur == nil {
 			break
 		}
-		temp := cur.Next
-		start := pre.Next
-		// 截断
+		tmp := cur.Next
 		cur.Next = nil
-		l1 := reverseList(start)
-		start.Next = temp
-		pre.Next = l1
-
+		start := pre.Next
+		n := reverseList(start)
+		pre.Next = n
+		start.Next = tmp
 		pre = start
 		cur = start
 	}
-
-	return dummy.Next
+	return d.Next
 }
 
 func reverseList(head *ListNode) *ListNode {
+	if head == nil {
+		return head
+	}
 	var pre *ListNode
 	cur := head
 	for cur != nil {
-		pre, cur, cur.Next = cur, cur.Next, pre
+		cur, pre, cur.Next = cur.Next, cur, pre
 	}
 	return pre
 }
