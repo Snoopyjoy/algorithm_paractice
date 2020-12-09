@@ -8,6 +8,22 @@ package leetcode_169
 
 // @lc code=start
 func majorityElement(nums []int) int {
+	v := nums[0]
+	c := 1
+	for i := 1; i < len(nums); i++ {
+		if nums[i] == v {
+			c++
+		} else {
+			c--
+		}
+		if c == 0 {
+			v = nums[i]
+			c = 1
+		}
+	}
+	return v
+}
+func majorityElement2(nums []int) int {
 	counter := make(map[int]int, len(nums))
 	pos := make([]int, len(nums))
 
