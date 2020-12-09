@@ -12,44 +12,53 @@ import (
  */
 
 // @lc code=start
+
+var btnMap map[rune][]rune = map[rune][]rune{
+	'2': []rune("abc"),
+	'3': []rune("def"),
+	'4': []rune("ghi"),
+	'5': []rune("jkl"),
+	'6': []rune("mno"),
+	'7': []rune("pqrs"),
+	'8': []rune("tuv"),
+	'9': []rune("wxyz"),
+}
+
 func letterCombinations(digits string) []string {
 	if digits == "" {
 		return []string{}
 	}
-	btnMap := make(map[int]([]string), 8)
-	btnMap[2] = []string{"a", "b", "c"}
-	btnMap[3] = []string{"d", "e", "f"}
-	btnMap[4] = []string{"g", "h", "i"}
-	btnMap[5] = []string{"j", "k", "l"}
-	btnMap[6] = []string{"m", "n", "o"}
-	btnMap[7] = []string{"p", "q", "r", "s"}
-	btnMap[8] = []string{"t", "u", "v"}
-	btnMap[9] = []string{"w", "x", "y", "z"}
-
-	digitsArr := strings.Split(digits, "")
-	return combineLetter(btnMap, digitsArr)
+	runes := make([][]rune, 0, len(digits))
+	for _, v := range digits {
+		runes = append(runes, btnMap[v])
+	}
+	reto := combineRunes(runes)
+	ret := make([]string, len(reto))
+	for i, v := range reto {
+		ret[i] = string(v)
+	}
+	return ret
 }
 
-func combineLetter(btnMap map[int]([]string), digitsArr []string) []string {
-	result := []string{}
-	if len(digitsArr) == 1 {
-		d := digitsArr[0]
-		num, _ := strconv.Atoi(d)
-		letters := btnMap[num]
-		return letters
+func combineRunes(runes [][]rune) [][]rune {
+	ret := [][]rune{}
+	if len(runes) == 1 {
+		for _, r := range runes[0] {
+			ret = append(ret, []rune{r})
+		}
+		return ret
 	}
-	d := digitsArr[0]
-	leftDigits := digitsArr[1:]
-	num, _ := strconv.Atoi(d)
-	letters := btnMap[num]
-	leftCombines := combineLetter(btnMap, leftDigits)
-	for _, l := range letters {
-		for _, c := range leftCombines {
-			r := append([]string{l}, c)
-			result = append(result, strings.Join(r, ""))
+	r := runes[0]
+	child := combineRunes(runes[1:])
+	for _, c := range r {
+		for _, cc := range child {
+			temp := make([]rune, 0, len(cc)+1)
+			temp = append(temp, c)
+			temp = append(temp, cc...)
+			ret = append(ret, temp)
 		}
 	}
-	return result
+	return ret
 }
 
 // @lc code=end
