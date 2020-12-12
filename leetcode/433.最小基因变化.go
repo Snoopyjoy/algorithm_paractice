@@ -29,8 +29,8 @@ func tracking(start string, end string, bankMap map[string]struct{}, visited map
 	if start == end {
 		if min == -1 || t < min {
 			min = t
-			return
 		}
+		return
 	}
 	for i, v := range start {
 		for _, r := range cs {
