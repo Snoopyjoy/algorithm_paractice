@@ -48,6 +48,7 @@ func tracking(start string, end string, bankMap map[string]struct{}, visited map
 			}
 			visited[ss] = struct{}{}
 			tracking(ss, end, bankMap, visited, t+1)
+			delete(visited, ss)
 		}
 	}
 }
