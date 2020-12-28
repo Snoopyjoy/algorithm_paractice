@@ -8,40 +8,36 @@ import "fmt"
 
 // @lc code=start
 func largestRectangleArea(heights []int) int {
-	if len(heights) < 1 {
+	if len(heights) == 0 {
 		return 0
 	}
-	stack := make([]int, 0, len(heights))
-	stack = append(stack, -1)
-	area := 0
-	for i := 0; i < len(heights); i++ {
-		v := heights[i]
-		for len(stack) > 1 && v < heights[top(stack)] {
-			topI := top(stack)
-			stack = stack[:len(stack)-1]
-			preI := top(stack)
-			tempA := (i - preI - 1) * heights[topI]
-			if tempA > area {
-				area = tempA
+	stk := make([]int, 0, len(heights)+1)
+	stk = append(stk, -1)
+
+	maxArea := 0
+	for i, h := range heights {
+		for len(stk) > 1 && h <= heights[stk[len(stk)-1]] {
+			hi := heights[stk[len(stk)-1]]
+			stk = stk[:len(stk)-1]
+			preI := stk[len(stk)-1]
+
+			area := (i - preI - 1) * hi
+			if area > maxArea {
+				maxArea = area
 			}
 		}
-		stack = append(stack, i)
+		stk = append(stk, i)
 	}
-	fmt.Println(stack)
-	for len(stack) > 1 {
-		topI := top(stack)
-		stack = stack[:len(stack)-1]
-		preI := top(stack)
-		tempA := (len(heights) - preI - 1) * heights[topI]
-		if tempA > area {
-			area = tempA
+
+	for i := 1; i < len(stk); i++ {
+		preI := stk[i-1]
+		hi := heights[stk[i]]
+		area := (len(heights) - preI - 1) * hi
+		if area > maxArea {
+			maxArea = area
 		}
 	}
-	return area
-}
-
-func top(arr []int) int {
-	return arr[len(arr)-1]
+	return maxArea
 }
 
 // @lc code=end
